@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "../../ContosoDentistryChatBot"
   workflow_dispatch:
 
 jobs:

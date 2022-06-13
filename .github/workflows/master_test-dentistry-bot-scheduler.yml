@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "../../ContosoDentistryScheduler"
   workflow_dispatch:
 
 jobs:
