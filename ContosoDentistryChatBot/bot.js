@@ -38,58 +38,85 @@ class DentaBot extends ActivityHandler {
             // }
             // else {...}
             if (LuisResult.luisResult.prediction.topIntent === "ScheduleAppointment" &&
-                LuisResult.intents.ScheduleAppointment.score > .5
+                LuisResult.intents.ScheduleAppointment.score > .7
             ) {
-                if (LuisResult.entities.$instance.date && 
-                    LuisResult.entities.$instance.date[0] &&
-                    LuisResult.entities.$instance.time &&
+                // if (LuisResult.entities.$instance.date && 
+                //     LuisResult.entities.$instance.date[0] &&
+                //     LuisResult.entities.$instance.time &&
+                //     LuisResult.entities.$instance.time[0]
+                // ){
+                // const date = LuisResult.entities.$instance.date[0].text;
+                // const time = LuisResult.entities.$instance.time[0].text;
+               
+                // const schedulenewappointment = "I have scheduled an appointment with a doctor on " + date + " by " + time;
+                // console.log(schedulenewappointment)
+
+                // await context.sendActivity(schedulenewappointment);
+                // }
+                // else {
+                // const schedulenewappointment = "I believe you want to schedule an appoinment. Please say 'Schedule appointment on date by time'";    
+                // console.log(schedulenewappointment)
+
+                // await context.sendActivity(schedulenewappointment);
+                // }
+                if (LuisResult.entities.$instance.time &&
                     LuisResult.entities.$instance.time[0]
                 ){
-                const date = LuisResult.entities.$instance.date[0].text;
                 const time = LuisResult.entities.$instance.time[0].text;
-                // call api with location entity info
-                const schedulenewappointment = "I have scheduled an appointment with a doctor on " + date + " by " + time;
+                
+                const schedulenewappointment = this.dentistScheduler.scheduleAppointment(time)
                 console.log(schedulenewappointment)
-
-                await context.sendActivity(schedulenewappointment);
+                const schedulenewappointment1 = "An appointment is set for " + time
+                console.log(schedulenewappointment1)   
+                await context.sendActivity(schedulenewappointment1);
                 }
                 else {
-                const schedulenewappointment = "I believe you want to schedule an appoinment. Please say 'Schedule appointment on date by time'";    
+                const schedulenewappointment = "I believe you want to schedule an appoinment. Please state a time to schedule";    
                 console.log(schedulenewappointment)
 
                 await context.sendActivity(schedulenewappointment);
                 }
+
                 await next();
                 return;
             }
             else if (LuisResult.luisResult.prediction.topIntent === "GetAvailability" &&
-            LuisResult.intents.GetAvailability.score > .5
+            LuisResult.intents.GetAvailability.score > .7
             ) {
-                if (LuisResult.entities.$instance && 
-                    LuisResult.entities.$instance.date && 
-                    LuisResult.entities.$instance.date[0] &&
-                    LuisResult.entities.$instance.time &&
-                    LuisResult.entities.$instance.time[0]
-                ){
-                const date = LuisResult.entities.$instance.date[0].text;
-                const time = LuisResult.entities.$instance.time[0].text;
+                // if (LuisResult.entities.$instance && 
+                //     LuisResult.entities.$instance.date && 
+                //     LuisResult.entities.$instance.date[0] &&
+                //     LuisResult.entities.$instance.time &&
+                //     LuisResult.entities.$instance.time[0]
+                // ){
+                // const date = LuisResult.entities.$instance.date[0].text;
+                // const time = LuisResult.entities.$instance.time[0].text;
                 
-                const checkavailability = "A doctor is available on " + date + " by " + time;
-                console.log(checkavailability)
+                // const checkavailability = "A doctor is available on " + date + " by " + time;
+                // console.log(checkavailability)
 
-                await context.sendActivity(checkavailability);
-                }
-                else {
-                    const checkavailability = "I believe you want to check availability of a time slot. Please state date and time to check";
-                    console.log(checkavailability)
+                // await context.sendActivity(checkavailability);
+                // }
+                // else {
+                //     const checkavailability = "I believe you want to check availability of a time slot. Please state date and time to check";
+                //     console.log(checkavailability)
                     
-                    await context.sendActivity(checkavailability);
-                }
+                //     await context.sendActivity(checkavailability);
+                // }
+
+                const checkavailability = this.dentistScheduler.getAvailability()
+                console.log(checkavailability)
+                
+                const checkavailability1 = "Current time slots available: 8am, 9am, 10am, 11am, 12pm, 1pm, 2pm, 3pm, 4pm"
+                console.log(checkavailability1)
+                await context.sendActivity(checkavailability1);
+                
                 await next();
                 return;
             };
             
             if (qnaResults[0]) {
+                console.log(`${qnaResults[0].answer}`)
                 await context.sendActivity(`${qnaResults[0].answer}`);
             }
             else {
@@ -104,7 +131,7 @@ class DentaBot extends ActivityHandler {
         this.onMembersAdded(async (context, next) => {
         const membersAdded = context.activity.membersAdded;
         //write a custom greeting
-        const welcomeText = 'Welcome to Contoso Dentistry Chatbot. I can help you schedule an appointment or Check if a time slot is available.  You can say "Schedule an appoinment" or "Check Availability"';
+        const welcomeText = 'Welcome to Contoso Dentistry Chatbot. I can help you schedule an appointment or Check if a time slot is available.  You can say "Schedule an appoinment" or "Check Availability" or ask a question about our services';
         for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
             if (membersAdded[cnt].id !== context.activity.recipient.id) {
                 await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
