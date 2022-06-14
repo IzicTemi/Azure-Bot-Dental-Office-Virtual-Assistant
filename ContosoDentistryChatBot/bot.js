@@ -121,8 +121,8 @@ class DentaBot extends ActivityHandler {
             }
             else {
                 // If no answers were returned from QnA Maker, reply with help.
-                await context.sendActivity(`I'm not sure I can answer your question `
-                    + ' I can schedule an appointment or Check if a time slot is available');
+                await context.sendActivity(`I'm not sure I can answer your question. Please rephrase.`
+                    + ' I can also schedule an appointment or Check for available time slots');
             }
 
             await next();
@@ -131,7 +131,7 @@ class DentaBot extends ActivityHandler {
         this.onMembersAdded(async (context, next) => {
         const membersAdded = context.activity.membersAdded;
         //write a custom greeting
-        const welcomeText = 'Welcome to Contoso Dentistry Chatbot. I can help you schedule an appointment or Check if a time slot is available.  You can say "Schedule an appoinment" or "Check Availability" or ask a question about our services';
+        const welcomeText = 'Welcome to Contoso Dentistry Chatbot. I can answer your questions, help you schedule an appointment or Check for available time slots.  You can say "Schedule an appoinment" or "Check Availability" or ask a question about our services';
         for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
             if (membersAdded[cnt].id !== context.activity.recipient.id) {
                 await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
