@@ -37,12 +37,8 @@ class DentaBot extends ActivityHandler {
             //  return;
             // }
             // else {...}
-            if (qnaResults[0]) {
-                console.log(`${qnaResults[0].answer}`)
-                await context.sendActivity(`${qnaResults[0].answer}`);
-            }
-           else if (LuisResult.luisResult.prediction.topIntent === "ScheduleAppointment" &&
-                LuisResult.intents.ScheduleAppointment.score > .7
+            if (LuisResult.luisResult.prediction.topIntent === "ScheduleAppointment" &&
+                LuisResult.intents.ScheduleAppointment.score > .8
             ) {
                 // if (LuisResult.entities.$instance.date && 
                 //     LuisResult.entities.$instance.date[0] &&
@@ -85,7 +81,7 @@ class DentaBot extends ActivityHandler {
                 return;
             }
             else if (LuisResult.luisResult.prediction.topIntent === "GetAvailability" &&
-            LuisResult.intents.GetAvailability.score > .7
+            LuisResult.intents.GetAvailability.score > .8
             ) {
                 // if (LuisResult.entities.$instance && 
                 //     LuisResult.entities.$instance.date && 
@@ -117,12 +113,18 @@ class DentaBot extends ActivityHandler {
                 
                 await next();
                 return;
-            }            
+            };
+            
+            if (qnaResults[0]) {
+                console.log(`${qnaResults[0].answer}`)
+                await context.sendActivity(`${qnaResults[0].answer}`);
+            }
             else {
-                // If no answers were returned from QnA Maker ans LUIS, reply with help.
+                // If no answers were returned from QnA Maker, reply with help.
                 await context.sendActivity(`I'm not sure I can answer your question. Please rephrase.`
                     + ' I can also schedule an appointment or Check for available time slots');
-            };
+            }
+
             await next();
     });
 
