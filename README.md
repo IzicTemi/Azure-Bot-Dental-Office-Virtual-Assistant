@@ -1,8 +1,4 @@
-# README Template
-
-Below is a template provided for use when building your README file for students.
-
-# Project Title
+# Azure Bot Dental Office Virtual Assistant
 
 Project description goes here.
 
